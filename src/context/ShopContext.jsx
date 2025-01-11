@@ -1,8 +1,10 @@
 import { createContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { products } from "../assets/assets";
-import {toast} from 'react-toastify';
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 // eslint-disable-next-line react-refresh/only-export-components
 export const ShopContext = createContext();
 

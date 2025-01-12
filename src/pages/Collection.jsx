@@ -3,7 +3,6 @@ import { ShopContext } from '../context/ShopContext';
 import { assets } from '../assets/assets';
 import Title from '../components/Title';
 import ProductItem from '../components/ProductItem';
-import Pagination from 'react-bootstrap/Pagination';
 
 const Collection = () => {
   const { products, search, showSearch } = useContext(ShopContext);
@@ -144,17 +143,6 @@ const Collection = () => {
           ))
         }
       </div>
-      <Pagination className='mt-4 flex justify-center'>
-        {[...Array(Math.ceil(filteredProducts.length / productsPerPage)).keys()].map(number => (
-          <Pagination.Item 
-            key={number + 1} 
-            onClick={() => paginate(number + 1)}
-            className={`mx-1 px-3 py-1 border border-gray-300 rounded cursor-pointer hover:bg-gray-200 ${number + 1 === currentPage ? 'bg-gray-300' : ''}`}
-          >
-            {number + 1}
-          </Pagination.Item>
-        ))}
-      </Pagination>
     </div>
 	</div>
   );

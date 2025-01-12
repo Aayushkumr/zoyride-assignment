@@ -3,6 +3,7 @@ import { ShopContext } from '../context/ShopContext';
 import { assets } from '../assets/assets';
 import Title from '../components/Title';
 import ProductItem from '../components/ProductItem';
+import Pagination from 'react-bootstrap/Pagination';
 
 const Collection = () => {
   const { products, search, showSearch } = useContext(ShopContext);
@@ -11,7 +12,14 @@ const Collection = () => {
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
   const [sortType,setSortType] = useState('relevent');
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 8;
 
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const toggleCategory = (e) => {
     if(category.includes(e.target.value)){
@@ -35,6 +43,7 @@ const Collection = () => {
     }
 
     setFilteredProducts(productsCopy);
+    setCurrentPage(1); // Reset to first page
   }
 
   const sortProduct = () => {
@@ -50,6 +59,7 @@ const Collection = () => {
         applyFilter();
         break;
     }
+    setCurrentPage(1); // Reset to first page
   }
 
     const toggleSubCategory = (e) => {
@@ -123,7 +133,7 @@ const Collection = () => {
 
       <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6'>
         {
-          filteredProducts.map((item, index) => (
+          currentProducts.map((item, index) => (
           <ProductItem
             key={index}
             id={item._id}
@@ -134,8 +144,17 @@ const Collection = () => {
           ))
         }
       </div>
-
-
+      <Pagination className='mt-4 flex justify-center'>
+        {[...Array(Math.ceil(filteredProducts.length / productsPerPage)).keys()].map(number => (
+          <Pagination.Item 
+            key={number + 1} 
+            onClick={() => paginate(number + 1)}
+            className={`mx-1 px-3 py-1 border border-gray-300 rounded cursor-pointer hover:bg-gray-200 ${number + 1 === currentPage ? 'bg-gray-300' : ''}`}
+          >
+            {number + 1}
+          </Pagination.Item>
+        ))}
+      </Pagination>
     </div>
 	</div>
   );

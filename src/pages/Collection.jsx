@@ -3,7 +3,7 @@ import { ShopContext } from '../context/ShopContext';
 import { assets } from '../assets/assets';
 import Title from '../components/Title';
 import ProductItem from '../components/ProductItem';
-import Pagination from 'react-bootstrap/Pagination';
+// import Pagination from 'react-bootstrap/Pagination';
 
 const Collection = () => {
   const { products, search, showSearch } = useContext(ShopContext);
@@ -20,6 +20,8 @@ const Collection = () => {
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const nextPage = () => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredProducts.length / productsPerPage)));
+  const prevPage = () => setCurrentPage(prev => Math.max(prev - 1, 1));
 
   const toggleCategory = (e) => {
     if(category.includes(e.target.value)){
@@ -144,17 +146,31 @@ const Collection = () => {
           ))
         }
       </div>
-      <Pagination className='mt-4 flex justify-center'>
+      <div className='mt-4 flex justify-center'>
+        <button 
+          onClick={prevPage} 
+          className='mx-1 px-3 py-1 border border-gray-300 rounded cursor-pointer hover:bg-gray-200'
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
         {[...Array(Math.ceil(filteredProducts.length / productsPerPage)).keys()].map(number => (
-          <Pagination.Item 
+          <button 
             key={number + 1} 
             onClick={() => paginate(number + 1)}
             className={`mx-1 px-3 py-1 border border-gray-300 rounded cursor-pointer hover:bg-gray-200 ${number + 1 === currentPage ? 'bg-gray-300' : ''}`}
           >
             {number + 1}
-          </Pagination.Item>
+          </button>
         ))}
-      </Pagination>
+        <button 
+          onClick={nextPage} 
+          className='mx-1 px-3 py-1 border border-gray-300 rounded cursor-pointer hover:bg-gray-200'
+          disabled={currentPage === Math.ceil(filteredProducts.length / productsPerPage)}
+        >
+          Next
+        </button>
+      </div>
     </div>
 	</div>
   );

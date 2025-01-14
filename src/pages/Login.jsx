@@ -53,7 +53,6 @@ const Login = () => {
         }
       </div>
       <button onClick={() => {navigate('/');}} className="bg-black text-white font-light mt-4 py-2 px-8">{currentState === 'Login' ? 'Sign In' : 'Sign Up'}</button>
-
     </form>
   )
 }

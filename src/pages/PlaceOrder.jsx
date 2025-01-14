@@ -6,6 +6,7 @@ import { ShopContext } from "../context/ShopContext";
 import { AuthContext } from "../context/AuthContext";
 
 const PlaceOrder = () => {
+  
   const [method, setMethod] = useState('cod');
   const { navigate } = useContext(ShopContext);
   const { user } = useContext(AuthContext);

@@ -11,6 +11,7 @@ const Profile = () => {
   }
 
   return (
+
     <div className='p-10 mt-20 border-t'>
       <div className="flex flex-col items-center bg-gray-100 p-8 mb-40 rounded-md">
         <img
@@ -29,6 +30,7 @@ const Profile = () => {
       </div>
       <Newsletter />
     </div>
+    
   );
 };
 

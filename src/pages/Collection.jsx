@@ -19,15 +19,18 @@ const Collection = () => {
         sortAsc: true,
         sortBy: 'relevant',
         rows: 8,
+        priceRange: [1000, 3500], // Added priceRange to filters
     });
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [productsPerPage, setProductsPerPage] = useState(8); 
 
     useEffect(() => {
         const initialFilter = getFilterObjectFromQuery(searchParams);
-        setFilters(initialFilter);
-        setProductsPerPage(initialFilter.rows); 
+        setFilters(prevFilters => ({
+            ...prevFilters,
+            ...initialFilter,
+            priceRange: initialFilter.priceRange || [1000, 3500], // Ensure priceRange has default values
+        }));
     }, [searchParams]);
 
     useEffect(() => {
@@ -42,7 +45,7 @@ const Collection = () => {
         }
 
         setFilteredProducts(filtered);
-        setCurrentPage(1); 
+        setCurrentPage(1); // Reset to first page
     }
 
     const handleCategoryChange = (selectedCategories) => {
@@ -57,6 +60,12 @@ const Collection = () => {
         updateURLParams(updatedFilters);
     }
 
+    const handlePriceChange = (priceRange) => { // New handler for price changes
+        const updatedFilters = { ...filters, priceRange };
+        setFilters(updatedFilters);
+        updateURLParams(updatedFilters);
+    }
+
     const handleClearFilters = () => {
         navigate('/collection');
         setFilters({
@@ -65,8 +74,8 @@ const Collection = () => {
             sortAsc: true,
             sortBy: 'relevant',
             rows: 8,
+            priceRange: [1000, 3500],
         });
-        setProductsPerPage(8); 
         setSearchParams({});
     }
 
@@ -81,19 +90,24 @@ const Collection = () => {
             params.type = updatedFilters.type.join(',');
         }
 
+        if (updatedFilters.priceRange && updatedFilters.priceRange.length === 2) {
+            params.priceMin = updatedFilters.priceRange[0];
+            params.priceMax = updatedFilters.priceRange[1];
+        }
+
         params.sortAsc = updatedFilters.sortAsc;
         params.sortBy = updatedFilters.sortBy;
-        params.rows = updatedFilters.rows; 
+        params.rows = updatedFilters.rows;
 
         setSearchParams(params);
     }
 
-    const indexOfLastProduct = currentPage * productsPerPage;
-    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const indexOfLastProduct = currentPage * filters.rows;
+    const indexOfFirstProduct = indexOfLastProduct - filters.rows;
     const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
-    const nextPage = () => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredProducts.length / productsPerPage)));
+    const nextPage = () => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredProducts.length / filters.rows)));
     const prevPage = () => setCurrentPage(prev => Math.max(prev - 1, 1));
 
     const uniqueFilters = getUniqueFilters(products);
@@ -106,9 +120,11 @@ const Collection = () => {
                 subCategories={uniqueFilters.type} 
                 onCategoryChange={handleCategoryChange} 
                 onSubCategoryChange={handleSubCategoryChange} 
+                onPriceChange={handlePriceChange} // Pass the new handler
                 onClearFilters={handleClearFilters}
                 selectedCategories={filters.category}
                 selectedSubCategories={filters.type}
+                priceRange={filters.priceRange} // Pass current price range
             />
             {/* Products */}
             <div className='flex-1'>
@@ -145,13 +161,12 @@ const Collection = () => {
                         <select 
                             onChange={(e) => {
                                 const value = Number(e.target.value);
-                                setProductsPerPage(value); // Update productsPerPage state
                                 const updatedFilters = { ...filters, rows: value };
                                 setFilters(updatedFilters);
                                 updateURLParams(updatedFilters);
                             }} 
                             className='border-2 border-gray-300 px-2 text-sm'
-                            value={productsPerPage} // Bind to productsPerPage state
+                            value={filters.rows} // Use filters.rows
                         >
                             <option value={4}>4 per page</option>
                             <option value={8}>8 per page</option>
@@ -182,7 +197,7 @@ const Collection = () => {
                     >
                         Previous
                     </button>
-                    {[...Array(Math.ceil(filteredProducts.length / productsPerPage)).keys()].map(number => (
+                    {[...Array(Math.ceil(filteredProducts.length / filters.rows)).keys()].map(number => (
                         <button 
                             key={number + 1} 
                             onClick={() => paginate(number + 1)}
@@ -194,7 +209,7 @@ const Collection = () => {
                     <button 
                         onClick={nextPage} 
                         className='mx-1 px-3 py-1 border border-gray-300 rounded cursor-pointer hover:bg-gray-200'
-                        disabled={currentPage === Math.ceil(filteredProducts.length / productsPerPage)}
+                        disabled={currentPage === Math.ceil(filteredProducts.length / filters.rows)}
                     >
                         Next
                     </button>
@@ -202,7 +217,6 @@ const Collection = () => {
             </div>
         </div>
     );
-
 }
 
 export default Collection;

@@ -1,43 +1,39 @@
 export const getFilterObjectFromQuery = (searchParams) => {
-    let processedFilter = {
-        category: [],
-        type: [],
-        sortAsc: true,
-        sortBy: 'relevant',
-        rows: 8,
-    };
+    const filter = {};
 
     const category = searchParams.get('category');
-    const type = searchParams.get('type');
-    const sortAsc = searchParams.get('sortAsc');
-    const sortBy = searchParams.get('sortBy');
-    const rows = searchParams.get('rows');
-
     if (category) {
-        processedFilter.category = category.split(',').filter(cat => cat);
+        filter.category = category.split(',');
     }
 
+    const type = searchParams.get('type');
     if (type) {
-        processedFilter.type = type.split(',').filter(sub => sub);
+        filter.type = type.split(',');
     }
 
+    const priceMin = searchParams.get('priceMin');
+    const priceMax = searchParams.get('priceMax');
+    if (priceMin && priceMax) {
+        filter.priceRange = [Number(priceMin), Number(priceMax)];
+    }
+
+    const sortAsc = searchParams.get('sortAsc');
     if (sortAsc !== null) {
-        processedFilter.sortAsc = sortAsc === 'true';
+        filter.sortAsc = sortAsc === 'true';
     }
 
+    const sortBy = searchParams.get('sortBy');
     if (sortBy) {
-        processedFilter.sortBy = sortBy;
+        filter.sortBy = sortBy;
     }
 
+    const rows = searchParams.get('rows');
     if (rows) {
-        const parsedRows = parseInt(rows, 10);
-        if (!isNaN(parsedRows)) {
-            processedFilter.rows = parsedRows;
-        }
+        filter.rows = Number(rows);
     }
 
-    return processedFilter;
-}
+    return filter;
+};
 
 export const getUniqueFilters = (products) => {
     const uniqueFilters = {
@@ -71,6 +67,21 @@ export const getFilteredProducts = (products, filter) => {
     if (filter.sortBy === 'price') {
         filtered.sort((a, b) => filter.sortAsc ? a.price - b.price : b.price - a.price);
     }
+    if (filter.priceRange && Array.isArray(filter.priceRange) && filter.priceRange.length === 2) {
+        const [minPrice, maxPrice] = filter.priceRange;
+        filtered = filtered.filter(product => {
+            const productPrice = Number(product.price);
+            return productPrice >= minPrice && productPrice <= maxPrice;
+        });
+    }
+    if (filter.priceRange && Array.isArray(filter.priceRange) && filter.priceRange.length === 2) {
+        const [minPrice, maxPrice] = filter.priceRange;
+        filtered = filtered.filter(product => {
+            const productPrice = Number(product.price);
+            return productPrice >= minPrice && productPrice <= maxPrice;
+        });
+    }
+
 
     return filtered;
 }

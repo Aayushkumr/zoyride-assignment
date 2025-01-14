@@ -6,11 +6,14 @@ const Filters = ({
     subCategories, 
     onCategoryChange, 
     onSubCategoryChange, 
+    onPriceChange, // New prop for price changes
     onClearFilters, 
     selectedCategories, 
-    selectedSubCategories 
+    selectedSubCategories,
+    priceRange // New prop to receive current price range
 }) => {
     const [showFilter, setShowFilter] = useState(false);
+    const [localPrice, setLocalPrice] = useState(priceRange || [1000, 3500]); // Initialize with existing price range
 
     const toggleCategory = (e) => {
         const value = e.target.value;
@@ -32,6 +35,12 @@ const Filters = ({
             updatedSubCategories.push(value);
         }
         onSubCategoryChange(updatedSubCategories);
+    };
+
+    const handlePriceChange = (e) => {
+        const value = Number(e.target.value);
+        setLocalPrice([1000, value]); // Assuming minimum price is fixed at 1000
+        onPriceChange([1000, value]);
     };
 
     return (
@@ -89,6 +98,25 @@ const Filters = ({
                     ))}
                 </div>
             </div>
+            {/* New Price Slider Section */}
+            <div className={`border border-gray-300 pl-5 py-3 mb-5 ${showFilter ? '' : 'hidden'} sm:block`}>
+                <p className='mb-3 text-sm font-medium'>Price Range</p>
+                <div className='flex items-center gap-4'>
+                    <span>₹1000</span>
+                    <input
+                        type='range'
+                        min='1000'
+                        max='3500'
+                        value={localPrice[1]}
+                        onChange={handlePriceChange}
+                        className='w-full'
+                    />
+                    <span>₹3500</span>
+                </div>
+                <p className='text-sm font-light text-gray-700 mt-2'>
+                    Up to: ₹{localPrice[1]}
+                </p>
+            </div>
         </div>
     );
 };
@@ -98,9 +126,11 @@ Filters.propTypes = {
     subCategories: PropTypes.array.isRequired,
     onCategoryChange: PropTypes.func.isRequired,
     onSubCategoryChange: PropTypes.func.isRequired,
+    onPriceChange: PropTypes.func.isRequired, // New prop type
     onClearFilters: PropTypes.func.isRequired,
     selectedCategories: PropTypes.array.isRequired,
     selectedSubCategories: PropTypes.array.isRequired,
+    priceRange: PropTypes.array // New prop type
 };
 
 export default Filters;

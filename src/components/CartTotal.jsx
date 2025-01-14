@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import cartStore from '../stores/CartStore';
+import cartStore from '../stores/cartStore';
 import Title from './Title';
 
 const CartTotal = observer(() => {

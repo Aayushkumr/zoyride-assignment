@@ -22,16 +22,14 @@ const Collection = () => {
     });
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [productsPerPage, setProductsPerPage] = useState(8); // Separate state
+    const [productsPerPage, setProductsPerPage] = useState(8); 
 
-    // Initialize filters from URL params
     useEffect(() => {
         const initialFilter = getFilterObjectFromQuery(searchParams);
         setFilters(initialFilter);
-        setProductsPerPage(initialFilter.rows); // Sync productsPerPage with filters.rows
+        setProductsPerPage(initialFilter.rows); 
     }, [searchParams]);
 
-    // Apply filters whenever dependencies change
     useEffect(() => {
         applyFilter();
     }, [products, search, showSearch, filters]);
@@ -44,7 +42,7 @@ const Collection = () => {
         }
 
         setFilteredProducts(filtered);
-        setCurrentPage(1); // Reset to first page
+        setCurrentPage(1); 
     }
 
     const handleCategoryChange = (selectedCategories) => {
@@ -68,7 +66,7 @@ const Collection = () => {
             sortBy: 'relevant',
             rows: 8,
         });
-        setProductsPerPage(8); // Reset productsPerPage to default
+        setProductsPerPage(8); 
         setSearchParams({});
     }
 
@@ -85,7 +83,7 @@ const Collection = () => {
 
         params.sortAsc = updatedFilters.sortAsc;
         params.sortBy = updatedFilters.sortBy;
-        params.rows = updatedFilters.rows; // Ensure rows are updated
+        params.rows = updatedFilters.rows; 
 
         setSearchParams(params);
     }

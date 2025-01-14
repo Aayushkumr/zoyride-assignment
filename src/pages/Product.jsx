@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { assets } from "../assets/assets";
 import RelatedProducts from "../components/RelatedProducts";
 import Tab from "../components/Tab";
-import cartStore from "../stores/CartStore";
+import cartStore from "../stores/cartStore";
 
 const Product = () => {
   const { productId } = useParams();
@@ -103,7 +103,7 @@ const Product = () => {
           </div>
         </div>
       </div>
-      <Tab isVertical={true} />
+      <Tab isVertical={false} />
       <RelatedProducts category={productData.category} subCategory={productData.subCategory} />
     </div>
   ) : (

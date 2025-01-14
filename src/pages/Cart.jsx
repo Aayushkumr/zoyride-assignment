@@ -4,7 +4,7 @@ import Title from "../components/Title";
 import { ShopContext } from "../context/ShopContext";
 import { assets } from "../assets/assets";
 import CartTotal from "../components/CartTotal";
-import cartStore from "../stores/CartStore";
+import cartStore from "../stores/cartStore";
 
 const Cart = observer(() => {
   const { products, currency, navigate } = useContext(ShopContext);

@@ -2,7 +2,7 @@ import { assets } from '../assets/assets'
 import { Link, NavLink } from 'react-router-dom'
 import { makeAutoObservable } from "mobx";
 import { observer } from "mobx-react-lite";
-import cartStore from '../stores/CartStore';
+import cartStore from '../stores/cartStore';
 import { useContext } from 'react';
 import { ShopContext } from '../context/ShopContext';
 

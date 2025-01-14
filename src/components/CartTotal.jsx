@@ -1,9 +1,10 @@
-import { useContext } from 'react';
-import { ShopContext } from '../context/ShopContext';
+import { observer } from 'mobx-react-lite';
+import cartStore from '../stores/CartStore';
 import Title from './Title';
 
-const CartTotal = () => {
-  const { currency, delivery_fee, getCartAmount } = useContext(ShopContext);
+const CartTotal = observer(() => {
+  const { currency, delivery_fee } = cartStore;
+
   return (
     <div className='w-full'>
       <div className='text-2xl'>
@@ -12,7 +13,7 @@ const CartTotal = () => {
       <div className='flex flex-col gap-2 mt-2 text-sm'>
         <div className='flex justify-between'>
           <p>Subtotal</p>
-          <p>{currency} {getCartAmount()}.00</p>
+          <p>{currency} {cartStore.getCartAmount}.00</p>
         </div>
         <hr />
         <div className='flex justify-between'>
@@ -22,11 +23,11 @@ const CartTotal = () => {
         <hr />
         <div className='flex justify-between'>
             <b>Total</b>
-            <b>{currency} {getCartAmount() === 0 ? 0 : getCartAmount() + delivery_fee}.00</b>
+            <b>{currency} {cartStore.getCartAmount === 0 ? 0 : cartStore.getCartAmount + delivery_fee}.00</b>
         </div>
       </div>
     </div>
   );
-}
+});
 
 export default CartTotal;

@@ -54,7 +54,8 @@ import p_img50 from './p_img50.png'
 import p_img51 from './p_img51.png'
 import p_img52 from './p_img52.png'
 
-
+import user1 from './user1.png'
+import user2 from './user2.png'
 import logo from './logo1.png'
 import hero_img from './her.png'
 import cart_icon from './cart_icon.png'
@@ -92,7 +93,9 @@ export const assets = {
     contact_img,
     razorpay_logo,
     stripe_logo,
-    cross_icon
+    cross_icon,
+    user1,
+    user2
 }
 
 export const products = [

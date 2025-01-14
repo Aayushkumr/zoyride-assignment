@@ -1,17 +1,15 @@
 import { useContext, useEffect, useState } from 'react';
 import { ShopContext } from '../context/ShopContext';
-import { assets } from '../assets/assets';
 import Title from '../components/Title';
 import ProductItem from '../components/ProductItem';
-// import Pagination from 'react-bootstrap/Pagination';
+import Filters from '../components/Filters'; 
 
 const Collection = () => {
   const { products, search, showSearch } = useContext(ShopContext);
-  const [showFilter, setShowFilter] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
-  const [sortType,setSortType] = useState('relevent');
+  const [sortType, setSortType] = useState('relevent');
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 8;
 
@@ -23,15 +21,7 @@ const Collection = () => {
   const nextPage = () => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredProducts.length / productsPerPage)));
   const prevPage = () => setCurrentPage(prev => Math.max(prev - 1, 1));
 
-  const toggleCategory = (e) => {
-    if(category.includes(e.target.value)){
-        setCategory(prev=> prev.filter(item => item !== e.target.value));
-    } else {
-      setCategory(prev => [...prev, e.target.value]);
-    }
-  }
-
-    const applyFilter = () => { 
+  const applyFilter = () => { 
     let productsCopy = products.slice();
     if(showSearch && search) {
       productsCopy = productsCopy.filter(item => item.name.toLowerCase().includes(search.toLowerCase()));
@@ -64,116 +54,91 @@ const Collection = () => {
     setCurrentPage(1); // Reset to first page
   }
 
-    const toggleSubCategory = (e) => {
-      if(subCategory.includes(e.target.value)){
-        setSubCategory(prev=> prev.filter(item => item !== e.target.value));
-      } else {
-        setSubCategory(prev => [...prev, e.target.value]);
-      }
+  const handleCategoryChange = (value) => {
+    if(category.includes(value)){
+        setCategory(prev=> prev.filter(item => item !== value));
+    } else {
+      setCategory(prev => [...prev, value]);
     }
+  }
 
-    
-    useEffect(() => {
-      applyFilter();
-    }, [category, subCategory, search, showSearch])
+  const handleSubCategoryChange = (value) => {
+    if(subCategory.includes(value)){
+      setSubCategory(prev=> prev.filter(item => item !== value));
+    } else {
+      setSubCategory(prev => [...prev, value]);
+    }
+  }
 
-    useEffect(() => { 
-      sortProduct();
-    } ,[sortType])
+  useEffect(() => {
+    applyFilter();
+  }, [category, subCategory, search, showSearch])
 
-  
+  useEffect(() => { 
+    sortProduct();
+  } ,[sortType])
 
   return (
-	<div className='flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t'>
-    {/* Filter */}
-	  <div className='min-w-60'>
-		<p onClick={() => setShowFilter(!showFilter)} className='my-2 text-xl flex items-center cursor-pointer gap-2'>FILTERS
-      <img className={`h-3 sm:hidden ${showFilter ? 'rotate-90' : ''}`} src={assets.dropdown_icon} alt="" />
-    </p>
-    {/* Category Filter */}
-		<div className={`border border-gray-300 pl-5 py-3 mt-6 ${showFilter ? '' : 'hidden'} sm:block`}>
-      <p className='mb-3 text-sm font-medium'>Categories</p>
-      <div className='flex flex-col gap-2 text-sm font-light text-gray-700'>
-        <p className='flex gap-2'>
-        <input type='checkbox' className='w-3' value={'Men'} onChange={toggleCategory}/>  Men
-        </p>
-        <p className='flex gap-2'>
-        <input type='checkbox' className='w-3' value={'Women'} onChange={toggleCategory}/>  Women
-        </p>
-        <p className='flex gap-2'>
-        <input type='checkbox' className='w-3' value={'Kids'} onChange={toggleCategory}/>  Kids
-        </p>
-		</div>
-	  </div>
-    {/* Subcategory Filter */}
-    <div className={`border border-gray-300 pl-5 py-3 my-5 ${showFilter ? '' : 'hidden'} sm:block`}>
-      <p className='mb-3 text-sm font-medium'>Type</p>
-      <div className='flex flex-col gap-2 text-sm font-light text-gray-700'>
-        <p className='flex gap-2'>
-        <input type='checkbox' className='w-3' value={'Topwear'} onChange={toggleSubCategory}/>  Topwear
-        </p>
-        <p className='flex gap-2'>
-        <input type='checkbox' className='w-3' value={'Bottomwear'} onChange={toggleSubCategory}/>  Bottomwear
-        </p>
-        <p className='flex gap-2'>
-        <input type='checkbox' className='w-3' value={'Winterwear'} onChange={toggleSubCategory}/>  Winterwear
-        </p>
-		</div>
-	  </div>
-    </div>
-    {/* Products */}
+    <div className='flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t'>
+      {/* Filter */}
+      <Filters 
+        categories={['Men', 'Women', 'Kids']} 
+        subCategories={['Topwear', 'Bottomwear', 'Winterwear']} 
+        onCategoryChange={handleCategoryChange} 
+        onSubCategoryChange={handleSubCategoryChange} 
+      />
+      {/* Products */}
+      <div className='flex-1'>
+        <div className='flex justify-between text-base sm:text-2xl mb-4'>
+          <Title text1={'BROWSE'} text2={'COLLECTIONS'}/>
+          <select onChange={(e)=>setSortType(e.target.value)} className='border-2 border-gray-300 px-2 text-sm'>
+            <option value='relevent'>Sort by: Relevant</option>
+            <option value='low-high'>Sort by: Low to High</option>
+            <option value='high-low'>Sort by: High to Low</option>
+          </select>
+        </div>
 
-    <div className='flex-1'>
-      <div className='flex justify-between text-base sm:text-2xl mb-4'>
-        <Title text1={'BROWSE'} text2={'COLLECTIONS'}/>
-        <select onChange={(e)=>setSortType(e.target.value)} className='border-2 border-gray-300 px-2 text-sm'>
-          <option value='relevent'>Sort by: Relevant</option>
-          <option value='low-high'>Sort by: Low to High</option>
-          <option value='high-low'>Sort by: High to Low</option>
-        </select>
-      </div>
-
-      <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6'>
-        {
-          currentProducts.map((item, index) => (
-          <ProductItem
-            key={index}
-            id={item._id}
-            image={item.image}
-            name={item.name}
-            price={item.price}
-          />
-          ))
-        }
-      </div>
-      <div className='mt-4 flex justify-center'>
-        <button 
-          onClick={prevPage} 
-          className='mx-1 px-3 py-1 border border-gray-300 rounded cursor-pointer hover:bg-gray-200'
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
-        {[...Array(Math.ceil(filteredProducts.length / productsPerPage)).keys()].map(number => (
+        <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6'>
+          {
+            currentProducts.map((item, index) => (
+            <ProductItem
+              key={index}
+              id={item._id}
+              image={item.image}
+              name={item.name}
+              price={item.price}
+            />
+            ))
+          }
+        </div>
+        <div className='mt-4 flex justify-center'>
           <button 
-            key={number + 1} 
-            onClick={() => paginate(number + 1)}
-            className={`mx-1 px-3 py-1 border border-gray-300 rounded cursor-pointer hover:bg-gray-200 ${number + 1 === currentPage ? 'bg-gray-300' : ''}`}
+            onClick={prevPage} 
+            className='mx-1 px-3 py-1 border border-gray-300 rounded cursor-pointer hover:bg-gray-200'
+            disabled={currentPage === 1}
           >
-            {number + 1}
+            Previous
           </button>
-        ))}
-        <button 
-          onClick={nextPage} 
-          className='mx-1 px-3 py-1 border border-gray-300 rounded cursor-pointer hover:bg-gray-200'
-          disabled={currentPage === Math.ceil(filteredProducts.length / productsPerPage)}
-        >
-          Next
-        </button>
+          {[...Array(Math.ceil(filteredProducts.length / productsPerPage)).keys()].map(number => (
+            <button 
+              key={number + 1} 
+              onClick={() => paginate(number + 1)}
+              className={`mx-1 px-3 py-1 border border-gray-300 rounded cursor-pointer hover:bg-gray-200 ${number + 1 === currentPage ? 'bg-gray-300' : ''}`}
+            >
+              {number + 1}
+            </button>
+          ))}
+          <button 
+            onClick={nextPage} 
+            className='mx-1 px-3 py-1 border border-gray-300 rounded cursor-pointer hover:bg-gray-200'
+            disabled={currentPage === Math.ceil(filteredProducts.length / productsPerPage)}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
-	</div>
   );
 }
 
-export default Collection
+export default Collection;

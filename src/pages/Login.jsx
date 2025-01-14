@@ -14,9 +14,9 @@ const Login = () => {
         <p className="prata-regular text-3xl">{currentState}</p>
         <hr className="border-none h-[1.5px] w-8 bg-gray-800" />
       </div>
-      {currentState === 'Login' ? '' : <input className="border border-gray-3=800 w-full p-2 px-3" type="email" placeholder="Name" required/> }
+      {currentState === 'Login' ? '' : <input className="border border-gray-3=800 w-full p-2 px-3" type="text" placeholder="Name" required/> }
       <input className="border border-gray-3=800 w-full p-2 px-3" type="email" placeholder="Email Address" required/>
-      <input className="border border-gray-3=800 w-full p-2 px-3" type="email" placeholder="Password" required/>
+      <input className="border border-gray-3=800 w-full p-2 px-3" type="text" placeholder="Password" required/>
       <div className="w-full flex text-sm mt-[-8px] justify-between">
         <p className="cursor-pointer">Forgot Password?</p>
         {

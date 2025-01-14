@@ -17,34 +17,31 @@ const ShopContextProvider = ({ children }) => {
     const [cartItems, setCartItems] = useState({});
     const navigate = useNavigate();
 
-
-    const addToCart = async (itemId, size) => {
-
-        if(!size) {
+    const addToCart = async (itemId, size, quantity = 1) => {
+        if (!size) {
             toast.error('Please select a size');
             return;
         }
 
         let cartCopy = structuredClone(cartItems);
-        
+
         if (cartCopy[itemId]) {
-            if(cartCopy[itemId][size]) {
-                cartCopy[itemId][size] += 1;
+            if (cartCopy[itemId][size]) {
+                cartCopy[itemId][size] += quantity;
+            } else {
+                cartCopy[itemId][size] = quantity;
             }
-         else {
-            cartCopy[itemId][size] = 1;
+        } else {
+            cartCopy[itemId] = {};
+            cartCopy[itemId][size] = quantity;
         }
-    } else {
-        cartCopy[itemId] = {};
-        cartCopy[itemId][size] = 1;
-    }
         setCartItems(cartCopy);
     }
 
     const getCartCount = () => {
         let totalCount = 0;
-        for(const items in cartItems) {
-            for(const item in cartItems[items]) {
+        for (const items in cartItems) {
+            for (const item in cartItems[items]) {
                 try {
                     if (cartItems[items][item] > 0) {
                         totalCount += cartItems[items][item];
@@ -57,22 +54,23 @@ const ShopContextProvider = ({ children }) => {
         return totalCount;
     }
 
-    const updateQuantity = async (itemId,size,quantity) => { 
+    const updateQuantity = async (itemId, size, quantity) => {
         let cartData = structuredClone(cartItems);
         cartData[itemId][size] = quantity;
         setCartItems(cartData);
     }
 
-    const getCartAmount = () => { 
+    const getCartAmount = () => {
         let totalAmount = 0;
-        for(const items in cartItems) {
+        for (const items in cartItems) {
             let itemInfo = products.find((product) => product._id === items);
-            for(const item in cartItems[items]) {
+            for (const item in cartItems[items]) {
                 totalAmount += itemInfo.price * cartItems[items][item];
             }
         }
         return totalAmount;
     }
+
     useEffect(() => {
         if (localStorage.getItem('cart')) {
             setCartItems(JSON.parse(localStorage.getItem('cart')));
@@ -87,7 +85,6 @@ const ShopContextProvider = ({ children }) => {
             {children}
         </ShopContext.Provider>
     )
-
 }
 
 ShopContextProvider.propTypes = {

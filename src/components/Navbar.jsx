@@ -2,6 +2,7 @@ import { assets } from '../assets/assets'
 import { Link, NavLink } from 'react-router-dom'
 import { makeAutoObservable } from "mobx";
 import { observer } from "mobx-react-lite";
+import cartStore from '../stores/CartStore';
 import { useContext } from 'react';
 import { ShopContext } from '../context/ShopContext';
 
@@ -21,7 +22,7 @@ const navbarStore = new NavbarStore();
 
 const Navbar = observer(() => {
 
-const {setShowSearch, getCartCount} = useContext(ShopContext);
+    const { setShowSearch } = useContext(ShopContext);
 
     return (
         <div className='flex items-center justify-between py-5 font-medium'>
@@ -47,20 +48,20 @@ const {setShowSearch, getCartCount} = useContext(ShopContext);
                 </NavLink>
             </ul>
             <div className='flex items-center gap-6'>
-                <img onClick={()=>setShowSearch(true)} src={assets.search_icon} className='w-5 cursor-pointer' alt="" />
+                <img onClick={() => setShowSearch(true)} src={assets.search_icon} className='w-5 cursor-pointer' alt="" />
                 <div className='group relative' >
-                <Link to='/login'><img className='w-5 cursor-pointer' src={assets.profile_icon} alt="" /></Link>
+                    <Link to='/login'><img className='w-5 cursor-pointer' src={assets.profile_icon} alt="" /></Link>
                     <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-4'>
                         <div className='flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded'>
-                            <p className='cursor-pointer hover:text-black'>My Profile</p>
-                            <p className='cursor-pointer hover:text-black'>Orders</p>
-                            <p className='cursor-pointer hover:text-black'>Logout</p>
+                            <Link to='/profile' className='cursor-pointer hover:text-black'>My Profile</Link>
+                            <Link to='/orders' className='cursor-pointer hover:text-black'>Orders</Link>
+                            <Link to='/login' className='cursor-pointer hover:text-black'>Logout</Link>
                         </div>
                     </div>
                 </div >
                 <Link to='/cart' className='relative'>
                     <img src={assets.cart_icon} className='w-5 min-w-5' alt="" />
-                    <p className='absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[-8px]'>{getCartCount()}</p>
+                    <p className='absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[-8px]'>{cartStore.getCartCount}</p>
                 </Link>
                 <img src={assets.menu_icon} className='w-5 cursor-pointer sm:hidden' alt="" onClick={() => navbarStore.toggleVisible()} />
             </div >

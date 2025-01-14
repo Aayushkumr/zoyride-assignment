@@ -1,4 +1,6 @@
-/* eslint-disable no-undef */
+import user_avatar from './user1.png';
+import user_avatar2 from './user2.png';
+
 const users = [
     {
         email: 'admin@admin.com',
@@ -13,7 +15,8 @@ const users = [
             zipcode: '12345',
             country: 'USA',
             phoneNumber: '123-456-7890'
-        }
+        },
+        avatar: user_avatar 
     },
     {
         email: 'something@something.com',
@@ -28,11 +31,12 @@ const users = [
             zipcode: '67890',
             country: 'USA',
             phoneNumber: '987-654-3210'
-        }
+        },
+        avatar: user_avatar2 
     }
 ];
 
-function login(email, password) {
+export function login(email, password) {
     const user = users.find(user => user.email === email && user.password === password);
     if (user && user.address) {
         return { success: true, message: 'Login successful', user };
@@ -40,5 +44,3 @@ function login(email, password) {
         return { success: false, message: 'Invalid email, password, or missing address' };
     }
 }
-
-module.exports = { login };

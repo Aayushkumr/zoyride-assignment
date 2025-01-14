@@ -5,6 +5,7 @@ import { observer } from "mobx-react-lite";
 import cartStore from '../stores/cartStore';
 import { useContext } from 'react';
 import { ShopContext } from '../context/ShopContext';
+import { AuthContext } from '../context/AuthContext';
 
 class NavbarStore {
     visible = false;
@@ -23,6 +24,7 @@ const navbarStore = new NavbarStore();
 const Navbar = observer(() => {
 
     const { setShowSearch } = useContext(ShopContext);
+    const { logout } = useContext(AuthContext);
 
     return (
         <div className='flex items-center justify-between py-5 font-medium'>
@@ -55,7 +57,7 @@ const Navbar = observer(() => {
                         <div className='flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded'>
                             <Link to='/profile' className='cursor-pointer hover:text-black'>My Profile</Link>
                             <Link to='/orders' className='cursor-pointer hover:text-black'>Orders</Link>
-                            <Link to='/login' className='cursor-pointer hover:text-black'>Logout</Link>
+                            <Link to='/login' onClick={logout} className='cursor-pointer hover:text-black'>Logout</Link>
                         </div>
                     </div>
                 </div >

@@ -1,13 +1,33 @@
-import { useContext, useState } from "react";
-import { assets } from "../assets/assets"
-import CartTotal from "../components/CartTotal"
-import Title from "../components/Title"
+import { useContext, useState, useEffect } from "react";
+import { assets } from "../assets/assets";
+import CartTotal from "../components/CartTotal";
+import Title from "../components/Title";
 import { ShopContext } from "../context/ShopContext";
+import { AuthContext } from "../context/AuthContext";
 
 const PlaceOrder = () => {
   const [method, setMethod] = useState('cod');
+  const { navigate } = useContext(ShopContext);
+  const { user } = useContext(AuthContext);
 
-  const {navigate} = useContext(ShopContext);
+  const [address, setAddress] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    street: '',
+    city: '',
+    state: '',
+    zipcode: '',
+    country: '',
+    phoneNumber: ''
+  });
+
+  useEffect(() => {
+    if(user && user.address){
+      setAddress(user.address);
+    }
+  }, [user]);
+
   return (
     <div className="flex flex-col sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t">
       <div className="flex flex-col gap-4 w-full sm:max-w-[480px]">
@@ -15,20 +35,74 @@ const PlaceOrder = () => {
           <Title text1={"Delivery"} text2={"Information"} />
         </div>
         <div className="flex gap-3">
-          <input className="border border-gray-300 rounded py-1.5 px-3.5 w-full p-2" type="text" placeholder="First Name" />
-          <input className="border border-gray-300 rounded py-1.5 px-3.5 w-full p-2" type="text" placeholder="Last Name" />
+          <input 
+            className="border border-gray-300 rounded py-1.5 px-3.5 w-full p-2" 
+            type="text" 
+            placeholder="First Name" 
+            value={address.firstName}
+            onChange={(e) => setAddress({...address, firstName: e.target.value})}
+          />
+          <input 
+            className="border border-gray-300 rounded py-1.5 px-3.5 w-full p-2" 
+            type="text" 
+            placeholder="Last Name" 
+            value={address.lastName}
+            onChange={(e) => setAddress({...address, lastName: e.target.value})}
+          />
         </div>
-        <input className="border border-gray-300 rounded py-1.5 px-3.5 w-full p-2" type="email" placeholder="Email Address" />
-        <input className="border border-gray-300 rounded py-1.5 px-3.5 w-full p-2" type="text" placeholder="Street" />
+        <input 
+          className="border border-gray-300 rounded py-1.5 px-3.5 w-full p-2" 
+          type="email" 
+          placeholder="Email Address" 
+          value={address.email}
+          onChange={(e) => setAddress({...address, email: e.target.value})}
+        />
+        <input 
+          className="border border-gray-300 rounded py-1.5 px-3.5 w-full p-2" 
+          type="text" 
+          placeholder="Street" 
+          value={address.street}
+          onChange={(e) => setAddress({...address, street: e.target.value})}
+        />
         <div className="flex gap-3">
-          <input className="border border-gray-300 rounded py-1.5 px-3.5 w-full p-2" type="text" placeholder="City" />
-          <input className="border border-gray-300 rounded py-1.5 px-3.5 w-full p-2" type="text" placeholder="State" />
+          <input 
+            className="border border-gray-300 rounded py-1.5 px-3.5 w-full p-2" 
+            type="text" 
+            placeholder="City" 
+            value={address.city}
+            onChange={(e) => setAddress({...address, city: e.target.value})}
+          />
+          <input 
+            className="border border-gray-300 rounded py-1.5 px-3.5 w-full p-2" 
+            type="text" 
+            placeholder="State" 
+            value={address.state}
+            onChange={(e) => setAddress({...address, state: e.target.value})}
+          />
         </div>
         <div className="flex gap-3">
-          <input className="border border-gray-300 rounded py-1.5 px-3.5 w-full p-2" type="text" placeholder="Zipcode" />
-          <input className="border border-gray-300 rounded py-1.5 px-3.5 w-full p-2" type="text" placeholder="Country" />
+          <input 
+            className="border border-gray-300 rounded py-1.5 px-3.5 w-full p-2" 
+            type="text" 
+            placeholder="Zipcode" 
+            value={address.zipcode}
+            onChange={(e) => setAddress({...address, zipcode: e.target.value})}
+          />
+          <input 
+            className="border border-gray-300 rounded py-1.5 px-3.5 w-full p-2" 
+            type="text" 
+            placeholder="Country" 
+            value={address.country}
+            onChange={(e) => setAddress({...address, country: e.target.value})}
+          />
         </div>
-        <input className="border border-gray-300 rounded py-1.5 px-3.5 w-full p-2" type="number" placeholder="Phone Number" />
+        <input 
+          className="border border-gray-300 rounded py-1.5 px-3.5 w-full p-2" 
+          type="number" 
+          placeholder="Phone Number" 
+          value={address.phoneNumber}
+          onChange={(e) => setAddress({...address, phoneNumber: e.target.value})}
+        />
       </div>
       <div className="mt-8">
         <div className="mt-8 min-w-80">

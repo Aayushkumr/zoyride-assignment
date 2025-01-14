@@ -6,14 +6,14 @@ const Filters = ({
     subCategories, 
     onCategoryChange, 
     onSubCategoryChange, 
-    onPriceChange, // New prop for price changes
+    onPriceChange, 
     onClearFilters, 
     selectedCategories, 
     selectedSubCategories,
-    priceRange // New prop to receive current price range
+    priceRange 
 }) => {
     const [showFilter, setShowFilter] = useState(false);
-    const [localPrice, setLocalPrice] = useState(priceRange || [1000, 3500]); // Initialize with existing price range
+    const [localPrice, setLocalPrice] = useState(priceRange || [1000, 3500]); 
 
     const toggleCategory = (e) => {
         const value = e.target.value;
